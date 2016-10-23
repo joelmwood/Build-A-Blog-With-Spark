@@ -6,6 +6,7 @@ import com.wood.blogs.model.NotFoundException;
 import com.wood.blogs.model.SimpleBlogPostDAO;
 import spark.ModelAndView;
 import spark.Request;
+import spark.Spark;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
 import java.util.HashMap;
