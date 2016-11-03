@@ -1,18 +1,17 @@
-group 'com.wood.spark-blog'
+group 'com.teamtreehouse.blog'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.5
+sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile 'com.sparkjava:spark-core:2.5'
+    compile 'com.sparkjava:spark-core:2.3'
     compile 'com.sparkjava:spark-template-handlebars:2.3'
-    compile 'org.slf4j:slf4j-simple:1.7.21'
-    compile 'com.github.slugify:slugify:2.1.6'
+    compile 'com.github.slugify:slugify:2.1.5'
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
