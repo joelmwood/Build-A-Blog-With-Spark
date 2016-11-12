@@ -2,205 +2,235 @@ package com.wood.blog;
 
 import com.github.slugify.Slugify;
 import com.wood.blog.dao.BlogDao;
-import com.wood.blog.dao.CommentDao;
-import com.wood.blog.dao.SimpleBlogDao;
-import com.wood.blog.dao.SimpleCommentDao;
-import com.wood.blog.model.BlogEntry;
+import com.wood.blog.dao.BlogEntryDAO;
 import com.wood.blog.model.Comment;
+import com.wood.blog.model.NotFoundException;
+import com.wood.blog.model.SimpleBlogDAO;
+import com.wood.blog.model.SimpleBlogEntryDAO;
 import spark.ModelAndView;
 import spark.Request;
-import spark.Response;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static spark.Spark.*;
 
 /**
  * Created by Wood on 10/24/2016.
  */
-public class Main {
-    private static final String FLASH_MESSAGE_KEY = "flash_message";
-
-    private static final BlogDao blogDao = new SimpleBlogDao();
-    private static final CommentDao commentDao = new SimpleCommentDao();
-    private static final HandlebarsTemplateEngine hbsEngine = new HandlebarsTemplateEngine();
-    private static Slugify slugify;
-
-    static {
-        try {
-            slugify = new Slugify();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Could not create a Slugify instance!");
-            System.exit(1);
-        }
-    }
-
-    public static void main(String[] args) {
-        // Set location of static files
-        staticFileLocation("/public");
-
-        // Session creation & cookie assignment to attribute
-        before((req, res) -> {
-            req.session(true);
-            if (req.cookie("username") != null) {
-                req.attribute("username", req.cookie("username"));
-            }
-        });
-
-        // Listing of all blog entries
-        get("/", (req, res) -> {
-            Map<String, Object> modelMap = new HashMap<>();
-            modelMap.put("entries", blogDao.findAll());
-            return new ModelAndView(modelMap, "index.hbs");
-        }, hbsEngine);
-
-        // Authentication before adding a new blog entry
-        before("/new.html", Main::redirectToLogin);
-
-        // Submitting the creation of a new blog entry
-        post("/", (req, res) -> {
-            String author = "Joel Wood";
-            String title = req.queryParams("title");
-            String slug = slugify.slugify(title);
-            String content = req.queryParams("entry");
-
-            blogDao.add(new BlogEntry(author, title, slug, content, null));
-            // Todo: Set a flash message
-            setFlashMessage(req,"Whoops, please sign in first.");
-            res.redirect("/");
-            return null;
-        });
-
-        // Detail view of a blog entry
-        get("/entry/:slug", (req, res) -> {
-            BlogEntry blogEntry = blogDao.findBySlug(req.params(":slug"));
-            Map<String, Object> modelMap = new HashMap<>();
-            modelMap.put("entry", blogEntry);
-            return new ModelAndView(modelMap, "detail.hbs");
-        }, hbsEngine);
-
-        // Adding a comment to a blog entry
-        post("/entry/:slug", (req, res) -> {
-            String slug = req.params(":slug");
-            commentDao.add(blogDao.findBySlug(slug),
-                    new Comment(req.queryParams("name"),
-                            req.queryParams("comment")));
-            res.redirect("/entry/" + slug);
-            return null;
-        });
-
-        // username authentication before editing or deleting a blog entry
-        before("/entry/:slug/*",(req, res) -> {
-            if (req.attribute("usernamename") == null) {
-                setFlashMessage(req,"Whoops, please sign in first.");
-                res.redirect("/password.html");
-                halt();
-            }
-        });
-
-        // Removing a blog entry
-        get("/entry/:slug/delete", (req, res) -> {
-            BlogEntry blogEntry = blogDao.findBySlug(req.params(":slug"));
-            blogDao.remove(blogEntry);
-            res.redirect("/");
-            // Todo: Set a flash message
-            return null;
-        });
-
-        // Editing a blog entry
-        get("/entry/:slug/edit", (req, res) -> {
-            BlogEntry blogEntry = blogDao.findBySlug(req.params(":slug"));
-            Map<String, Object> modelMap = new HashMap<>();
-            modelMap.put("entry", blogEntry);
-            return new ModelAndView(modelMap, "edit.hbs");
-        }, hbsEngine);
-
-        // Submitting the blog entry changes
-        post("/entry/:slug/edit", (req, res) -> {
-            String slug = req.params(":slug");
-            BlogEntry blogEntry = blogDao.findBySlug(slug);
-            String title = req.queryParams("title");
-            String newSlug = slugify.slugify(title);
-            blogDao.edit(blogEntry, title, newSlug, req.queryParams("entry"));
-            res.redirect("/entry/" + newSlug);
-            // Todo: Set a flash message
-            return null;
-        });
-
-        // Authentication and cookie setting on the password page
-        post("/password.html", (req, res) -> {
-            if (req.queryParams("password").equals("admin")) {
-                // Todo: Set a flash message
-                res.cookie("username", "admin");
-                String origin = req.session().attribute("origin");
-                req.session().removeAttribute("origin");
-                res.redirect(origin);
-                halt();
-            }
-            // Todo: Set a flash message
-            res.redirect("/password.html");
-            return null;
-        });
-
-
-        // Create first blog entries
-        createSomeBlogEntries();
-    }
-
-    private static void redirectToLogin(Request req, Response res) {
-        if (req.attribute("username") == null || !req.attribute("username").equals("admin")) {
-            req.session().attribute("origin", req.uri());
-            res.redirect("/password.html");
-            halt();
-        }
-    }
-
-    private static void createSomeBlogEntries() {
-        String titleTmp;
-        String slugTmp;
-
-        titleTmp = "A Great Day with a Friend";
-        slugTmp = slugify.slugify(titleTmp);
-        blogDao.add(new BlogEntry("Florian Antonius", titleTmp, slugTmp,
-                "It was an amazing day with a good friend.", Arrays.asList("Friends", "Amazing")));
-
-        titleTmp = "The Unusual Coder";
-        slugTmp = slugify.slugify(titleTmp);
-        blogDao.add(new BlogEntry("Florian Antonius", titleTmp, slugTmp,
-                "Some people code in extraordinarily strange ways.", Arrays.asList("People", "Coding", "Strange")));
-
-        titleTmp = "What Will This Day Bring?";
-        slugTmp = slugify.slugify(titleTmp);
-        blogDao.add(new BlogEntry("Florian Antonius", titleTmp, slugTmp,
-                "Isn't it always a mystery what is going to happen next? One day it looks like a shiny morning and the " +
-                        "next thing you know, it is pouring rain without limitation. It is this unforeseen factor" +
-                        "which brings about a freshness in life everyday.", Arrays.asList("Time")));
-    }
+public class Main {private static final String flashMessage = "";
 
     private static void setFlashMessage(Request req, String message) {
-        req.session().attribute(FLASH_MESSAGE_KEY, message);
+        req.session().attribute(flashMessage, message);
     }
 
     private static String getFlashMessage(Request req) {
         if (req.session(false) == null) {
             return null;
         }
-        if (!req.session().attributes().contains(FLASH_MESSAGE_KEY)) {
+        if (!req.session().attributes().contains(flashMessage)) {
             return null;
         }
-        return (String) req.session().attribute(FLASH_MESSAGE_KEY);
+        return (String) req.session().attribute(flashMessage);
     }
 
     private static String captureFlashMessage(Request req) {
         String message = getFlashMessage(req);
         if (message != null) {
-            req.session().removeAttribute(FLASH_MESSAGE_KEY);
+            req.session().removeAttribute(flashMessage);
         }
         return message;
+    }
+
+    public static void main(String[] args) {
+        staticFileLocation("/public");
+        BlogDao dao = new SimpleBlogDAO();
+        Map<String, Object> model = new HashMap<>();
+
+        BlogEntryDAO entry1 = new SimpleBlogEntryDAO(
+                "Software",
+                "Joel Wood",
+                "This blog entry is about software. This blog entry is about software. " +
+                "This blog entry is about software. This blog entry is about software. " +
+                "This blog entry is about software. This blog entry is about software. " +
+                "This blog entry is about software. This blog entry is about software. " +
+                "This blog entry is about software. This blog entry is about software. " +
+                "This blog entry is about software. This blog entry is about software. " +
+                "This blog entry is about software. This blog entry is about software. ");
+
+        BlogEntryDAO entry2 = new SimpleBlogEntryDAO(
+                "Hardware",
+                "Joel Wood",
+                "This blog entry is about hardware. This blog entry is about hardware. " +
+                "This blog entry is about hardware. This blog entry is about hardware. " +
+                "This blog entry is about hardware. This blog entry is about hardware. " +
+                "This blog entry is about hardware. This blog entry is about hardware. " +
+                "This blog entry is about hardware. This blog entry is about hardware.");
+
+        BlogEntryDAO entry3 = new SimpleBlogEntryDAO(
+                "Peripherals",
+                "Joel Wood",
+                "This blog entry is about Peripherals. This blog entry is about Peripherals."  +
+                "This blog entry is about Peripherals. This blog entry is about Peripherals."  +
+                "This blog entry is about Peripherals. This blog entry is about Peripherals."  +
+                "This blog entry is about Peripherals. This blog entry is about Peripherals."  +
+                "This blog entry is about Peripherals. This blog entry is about Peripherals."  +
+                "This blog entry is about Peripherals. This blog entry is about Peripherals.");
+
+        entry1.addTag("code");
+        entry1.addTag("software");
+        entry2.addTag("hardware");
+        entry2.addTag("not-code");
+        entry3.addTag("mouse");
+        entry3.addTag("keyboard");
+
+        dao.addEntry(entry1);
+        dao.addEntry(entry2);
+        dao.addEntry(entry3);
+
+        before((req, res) -> {
+            if (req.cookie("username") != null) {
+                req.attribute("username", req.cookie("username"));
+            }
+            model.put("username", req.attribute("username"));
+        });
+
+        get("/", (req, res) -> {
+            model.put("flashMessage", captureFlashMessage(req));
+            return new ModelAndView(model, "/hbs/index.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        get("/index", (req, res) -> {
+            model.put("flashMessage", captureFlashMessage(req));
+            return new ModelAndView(model, "/hbs/index.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        get("/entries", (req, res) -> {
+            model.remove("tag");
+            model.remove("author");
+            model.put("flashMessage", captureFlashMessage(req));
+            model.put("entries", dao.findAllEntries());
+            return new ModelAndView(model, "/hbs/entries.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        get("/new", (req, res) -> {
+            if(req.attribute("username") != null) {
+                model.put("flashMessage", captureFlashMessage(req));
+                return new ModelAndView(model, "/hbs/new.hbs");
+            } else {
+                setFlashMessage(req, "Please log in first");
+                res.redirect("/log-in");
+                return null;
+            }
+        }, new HandlebarsTemplateEngine());
+
+        post("/entries", (req, res) -> {
+            BlogEntryDAO entry = new SimpleBlogEntryDAO(req.queryParams("title"), req.attribute("username"), req.queryParams("content"));
+            Set<String> tags = new TreeSet<>();
+            Collections.addAll(tags, req.queryParams("tags").toLowerCase().split("[\\W\\s_]+"));
+            tags.forEach(entry::addTag);
+            dao.addEntry(entry);
+            setFlashMessage(req,"\"" + entry.getTitle() + "\""+" created successfully!");
+            res.redirect("/entries");
+            return null;
+        });
+
+        get("/entries/:slug", (req, res) -> {
+            model.put("flashMessage", captureFlashMessage(req));
+            model.put("entry", dao.findEntryBySlug(req.params("slug")));
+            return new ModelAndView(model, "/hbs/entry.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        post("/entries/:slug/comment", (req, res) -> {
+            BlogEntryDAO entry = dao.findEntryBySlug(req.params("slug"));
+            String author;
+            if (req.attribute("username") != null) {
+                author = req.attribute("username");
+            } else {
+                author = "anonymous";
+            }
+            entry.addComment(new Comment(req.queryParams("title"), author, req.queryParams("comment")));
+            setFlashMessage(req, "Comment posted!");
+            res.redirect("/entries/" + entry.getSlug());
+            return null;
+        });
+
+        get("/log-in", (req, res) -> {
+            model.put("flashMessage", captureFlashMessage(req));
+            return new ModelAndView(model, "/hbs/log-in.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        post("/log-in", (req, res) -> {
+            String username = req.queryParams("username");
+            res.cookie("username", username);
+            res.redirect("/entries");
+            return null;
+        });
+
+        get("/:author", (req, res) -> {
+            String author = req.params("author");
+            model.remove("tag");
+            model.put("flashMessage", captureFlashMessage(req));
+            model.put("entries", dao.entriesByAuthor(author));
+            model.put("author", author);
+            return new ModelAndView(model, "/hbs/entries.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        get("/entries/:slug/edit", (req, res) -> {
+            BlogEntryDAO entry = dao.findEntryBySlug(req.params("slug"));
+            if ((entry.getAuthor()).equals(req.attribute("username")) || (req.attribute("username")).equals("admin")) {
+                model.put("entry", entry);
+                model.put("flashMessage", captureFlashMessage(req));
+                return new ModelAndView(model, "/hbs/edit.hbs");
+            } else {
+                setFlashMessage(req, "You do not have permission to edit this post.");
+                res.redirect("/entries/" + entry.getSlug());
+                return null;
+            }
+        }, new HandlebarsTemplateEngine());
+
+        post("/entries/:slug/edit", (req, res) -> {
+            BlogEntryDAO entry = dao.findEntryBySlug(req.params("slug"));
+            entry.setTitle(req.queryParams("title"));
+            entry.setContent(req.queryParams("content"));
+            entry.setDate();
+            entry.setSlug();
+            Set<String> tags = new TreeSet<>();
+            Collections.addAll(tags, req.queryParams("tags").toLowerCase().split("[\\W\\s_]+"));
+            tags.forEach(entry::addTag);
+            setFlashMessage(req, "Post updated successfully!");
+            res.redirect("/entries/" + entry.getSlug());
+            return null;
+        });
+
+        post("/entries/:slug/delete", (req, res) -> {
+            BlogEntryDAO entry = dao.findEntryBySlug(req.params("slug"));
+            if ((entry.getAuthor()).equals(req.attribute("username")) || (req.attribute("username")).equals("admin")) {
+                dao.deleteEntry(entry);
+                setFlashMessage(req, "\"" + entry.getTitle() + "\" deleted successfully.");
+                res.redirect("/entries");
+            } else {
+                setFlashMessage(req, "You do not have permission to delete this post!");
+                res.redirect("/entries/" + entry.getSlug());
+            }
+            return null;
+        });
+
+        get("/tags/:tag", (req, res) -> {
+            String tag = req.params("tag");
+            model.remove("author");
+            model.put("flashMessage", captureFlashMessage(req));
+            model.put("tag", tag);
+            model.put("entries", dao.entriesByTag(tag));
+            return new ModelAndView(model, "/hbs/entries.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        exception(NotFoundException.class, (exc, req, res) -> {
+            res.status(404);
+            HandlebarsTemplateEngine engine = new HandlebarsTemplateEngine();
+            String html = engine.render(new ModelAndView(null, "/hbs/not-found.hbs"));
+            res.body(html);
+        });
     }
 }

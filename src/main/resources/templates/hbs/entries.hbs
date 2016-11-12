@@ -1,0 +1,30 @@
+{{#partial "content"}}
+    {{#if author}}
+        <h1>All entries by {{author}}:</h1>
+    {{/if}}
+    {{#if tag}}
+        <h1>All entries tagged with {{tag}}:</h1>
+    {{/if}}
+    <section>
+    <div class="entry-list container">
+        {{#if entries}}
+        {{#each entries}}
+            <h2><a href="/entries/{{slug}}">{{title}}</a> by <a href="/{{author}}">{{author}}</a></h2>
+            <p>Last edited on {{date}}</p>
+            <br>
+        {{/each}}
+        {{else}}<h1>No entries!</h1>
+        {{/if}}
+        {{#if author}}
+            <h3><a href="/entries">Back to all entries</a></h3>
+        {{/if}}
+        {{#if tag}}
+            <h3><a href="/entries">Back to all entries</a></h3>
+        {{/if}}
+        </div>
+    </section>
+{{/partial}}
+
+{{#partial "title"}}SparkBlog - Entry list{{/partial}}
+
+{{> hbs/base.hbs}}
