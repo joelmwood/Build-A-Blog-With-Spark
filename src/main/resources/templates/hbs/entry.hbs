@@ -1,5 +1,5 @@
 {{#partial "title"}}
-    {{entry.title}}
+    SparkBlog - {{entry.title}}
 {{/partial}}
 {{#partial "content"}}
     <section>
@@ -20,19 +20,20 @@
             <form action="/entries" method="get"><button class="button">Back to entry list</button></form>
         </div>
     </section>
-    <section>
+    <section class="comments">
         <div class="entry-comments">
             <h2>Comments</h2>
+            <section>
+                {{#each entry.comments}}
+                    <h3>{{this.title}} by <a href="/{{this.author}}">{{this.author}}</a></h3>
+                    <p>on {{this.date}}</p>
+                    <p>{{this.comment}}</p>
+                    <br>
+                {{/each}}
+            </section>
             <form action="/entries/{{entry.slug}}/comment" method="post" class="new-comment">
-                <section>
-                    {{#each entry.comments}}
-                        <h3>{{this.title}} by <a href="/{{this.author}}">{{this.author}}</a></h3>
-                        <h4>on {{this.date}}</h4>
-                        <p>{{this.comment}}</p>
-                    {{/each}}
-                </section>
                 <br>
-                <label for="Title">Post a new Comment: <br> Title:</label>
+                <label for="Title">Title:</label>
                 <input type="text" id="Title" name="title">
                 <label for="comment">Comment:</label>
                 <textarea name="comment" id="comment"></textarea>

@@ -10,14 +10,6 @@
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="stylesheet" href="/css/site.css">
     <script type="text/javascript" src="jquery-1.8.3.js"></script>
-    <script language="javascript">
-        function autoResizeDiv()
-        {
-            document.getElementById('main').style.height = window.innerHeight +'px';
-        }
-        window.onresize = autoResizeDiv;
-        autoResizeDiv();
-    </script>
 </head>
 <body>
 <header>
@@ -28,10 +20,9 @@
                 <p class="welcome-banner">Welcome, {{username}}! <a href="/index" onclick="myFunction()">Sign out</a></p>
                 <script>
                     function myFunction() {
-                        document.cookie = "username=";
+                        document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                     }
                 </script>
-
             {{else}} <p class="welcome-banner"><a href="/log-in">Log in</a></p>
             {{/if}}
             {{#block "create-button"}}<a class="new-entry button button-round" href="/new" title="New Entry"><i class="material-icons">create</i></a>{{/block}}
@@ -50,6 +41,10 @@
     </div>
 </section>
 <footer>
+    <div>
+        <a href="#">Contact Us</a>&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+        <a href="#">Terms</a>
+    </div>
 </footer>
 </body>
 </html>
