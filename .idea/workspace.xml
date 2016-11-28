@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="147c4bd8-2a30-462d-85b7-f4cc23433529" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/public/css/site.css" afterPath="$PROJECT_DIR$/src/main/resources/public/css/site.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/resources/main/public/css/site.css" afterPath="$PROJECT_DIR$/build/resources/main/public/css/site.css" />
     </list>
     <ignored path="blog.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -987,7 +987,14 @@
       <option name="project" value="LOCAL" />
       <updated>1480352310973</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Adjusted New Entry Icon placement.">
+      <created>1480355558773</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1480355558773</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1047,7 +1054,8 @@
     <MESSAGE value="Added missing files" />
     <MESSAGE value="Corrected Sign Out Issue" />
     <MESSAGE value="Reduced width for comments section." />
-    <option name="LAST_COMMIT_MESSAGE" value="Reduced width for comments section." />
+    <MESSAGE value="Adjusted New Entry Icon placement." />
+    <option name="LAST_COMMIT_MESSAGE" value="Adjusted New Entry Icon placement." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
