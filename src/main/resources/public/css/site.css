@@ -183,6 +183,8 @@ a.link {
 .entry-comments {
 	background: #f1f1f1;
 	padding: 70px 0;
+	max-width: 700px;
+	margin: 0 auto;
 }
 .entry-comments .container {
 	background: transparent;

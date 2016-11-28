@@ -17,9 +17,9 @@
         <div class="site-header">
             <a class="logo" href="/index">SPARKBLOG</a>
             {{#if username}}
-                <p class="welcome-banner">Welcome, {{username}}! <a href="/index" onclick="myFunction()">Sign out</a></p>
+                <p class="welcome-banner">Welcome, {{username}}! <a href="/" onclick="signOut()">Sign out</a></p>
                 <script>
-                    function myFunction() {
+                    function signOut() {
                         document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                     }
                 </script>
