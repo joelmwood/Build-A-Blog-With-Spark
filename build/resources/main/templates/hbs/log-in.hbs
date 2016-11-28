@@ -1,0 +1,19 @@
+{{#partial "title"}}SparkBlog - Log in{{/partial}}
+{{#partial "content"}}
+    <section>
+        <div class="container">
+            <div class="password">
+                <form action="/log-in" method="post">
+                    <section>
+                    <label for="username">Enter username:</label>
+                    <input type="username" name="username" id="username">
+                    </section>
+                    <br>
+                    <input type="submit" value="Submit" class="button">
+                    <a href="index" class="button button-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </section>
+{{/partial}}
+{{> hbs/base.hbs}}

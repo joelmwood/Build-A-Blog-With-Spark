@@ -1,0 +1,15 @@
+{{#partial "content"}}
+    <form action="/entries" method="post" class="new-entry">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title">
+        <label for="content">Enter blog post here:</label>
+        <textarea id="content" name="content"></textarea>
+        <label for="tags">Put tags here (separate with spaces and/or commas):</label>
+        <input type="text" id="tags" name="tags">
+        <input type="submit" value="Publish Entry" class="button">
+        <a href="/entries" class="button button-secondary">Cancel</a>
+    </form>
+{{/partial}}
+{{#partial "create-button"}}{{/partial}}
+{{#partial "title"}}SparkBlog - New entry{{/partial}}
+{{> hbs/base.hbs}}

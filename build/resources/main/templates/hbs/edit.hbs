@@ -1,0 +1,19 @@
+{{#partial "content"}}
+    <form action="/entries/{{entry.slug}}/edit" method="post" class="new-entry">
+        <label for="title">Edit Title:</label>
+        <input type="text" id="title" name="title" value={{entry.title}}>
+        <label for="content">Edit blog post here:</label>
+        <textarea id="content" name="content">{{entry.content}}</textarea>
+        <label for="tags">Add new tags here (separate with spaces and/or commas):</label>
+        <input type="text" id="tags" name="tags">
+        <input type="submit" value="Publish Entry" class="button">
+        <a href="/entries" class="button button-secondary">Cancel</a>
+        </form>
+        <form action="/entries/{{entry.slug}}/delete" method="post">
+            <button class="button" onclick="return confirm('Are you sure you want to delete {{entry.title}}?')">Delete Entry</button>
+        </form>
+{{/partial}}
+{{#partial "create-button"}}{{/partial}}
+{{#partial "title"}}Editing {{entry.title}}{{/partial}}
+
+{{> hbs/base.hbs}}
