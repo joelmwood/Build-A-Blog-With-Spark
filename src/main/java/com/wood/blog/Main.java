@@ -51,32 +51,32 @@ public class Main {private static final String flashMessage = "";
         BlogEntryDAO entry1 = new SimpleBlogEntryDAO(
                 "Software",
                 "Joel Wood",
-                "This blog entry is about software. This blog entry is about software. " +
-                "This blog entry is about software. This blog entry is about software. " +
-                "This blog entry is about software. This blog entry is about software. " +
-                "This blog entry is about software. This blog entry is about software. " +
-                "This blog entry is about software. This blog entry is about software. " +
-                "This blog entry is about software. This blog entry is about software. " +
-                "This blog entry is about software. This blog entry is about software. ");
+                "This dao entry is about software. This dao entry is about software. " +
+                "This dao entry is about software. This dao entry is about software. " +
+                "This dao entry is about software. This dao entry is about software. " +
+                "This dao entry is about software. This dao entry is about software. " +
+                "This dao entry is about software. This dao entry is about software. " +
+                "This dao entry is about software. This dao entry is about software. " +
+                "This dao entry is about software. This dao entry is about software. ");
 
         BlogEntryDAO entry2 = new SimpleBlogEntryDAO(
                 "Hardware",
                 "Joel Wood",
-                "This blog entry is about hardware. This blog entry is about hardware. " +
-                "This blog entry is about hardware. This blog entry is about hardware. " +
-                "This blog entry is about hardware. This blog entry is about hardware. " +
-                "This blog entry is about hardware. This blog entry is about hardware. " +
-                "This blog entry is about hardware. This blog entry is about hardware.");
+                "This dao entry is about hardware. This dao entry is about hardware. " +
+                "This dao entry is about hardware. This dao entry is about hardware. " +
+                "This dao entry is about hardware. This dao entry is about hardware. " +
+                "This dao entry is about hardware. This dao entry is about hardware. " +
+                "This dao entry is about hardware. This dao entry is about hardware.");
 
         BlogEntryDAO entry3 = new SimpleBlogEntryDAO(
                 "Peripherals",
                 "Joel Wood",
-                "This blog entry is about Peripherals. This blog entry is about Peripherals."  +
-                "This blog entry is about Peripherals. This blog entry is about Peripherals."  +
-                "This blog entry is about Peripherals. This blog entry is about Peripherals."  +
-                "This blog entry is about Peripherals. This blog entry is about Peripherals."  +
-                "This blog entry is about Peripherals. This blog entry is about Peripherals."  +
-                "This blog entry is about Peripherals. This blog entry is about Peripherals.");
+                "This dao entry is about Peripherals. This dao entry is about Peripherals."  +
+                "This dao entry is about Peripherals. This dao entry is about Peripherals."  +
+                "This dao entry is about Peripherals. This dao entry is about Peripherals."  +
+                "This dao entry is about Peripherals. This dao entry is about Peripherals."  +
+                "This dao entry is about Peripherals. This dao entry is about Peripherals."  +
+                "This dao entry is about Peripherals. This dao entry is about Peripherals.");
 
         entry1.addTag("code");
         entry1.addTag("software");

@@ -1,4 +1,4 @@
-group 'com.teamtreehouse.blog'
+group 'com.teamtreehouse.dao'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
