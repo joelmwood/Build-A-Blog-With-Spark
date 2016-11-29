@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/blog.iml" filepath="$PROJECT_DIR$/.idea/modules/blog.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/blog_main.iml" filepath="$PROJECT_DIR$/.idea/modules/blog_main.iml" group="blog" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/blog_test.iml" filepath="$PROJECT_DIR$/.idea/modules/blog_test.iml" group="blog" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dao.iml" filepath="$PROJECT_DIR$/.idea/modules/dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dao_main.iml" filepath="$PROJECT_DIR$/.idea/modules/dao_main.iml" group="dao" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dao_test.iml" filepath="$PROJECT_DIR$/.idea/modules/dao_test.iml" group="dao" />
     </modules>
   </component>
 </project>

@@ -8,10 +8,13 @@
         <input type="text" id="tags" name="tags">
         <input type="submit" value="Publish Entry" class="button">
         <a href="/entries" class="button button-secondary">Cancel</a>
+        <br>
+        <br>
+            <form class="deleteButton" action="/entries/{{entry.slug}}/delete" method="post">
+                <button class="button" onclick="return confirm('Are you sure you want to delete {{entry.title}}?')">Delete Entry</button>
+            </form>
         </form>
-        <form action="/entries/{{entry.slug}}/delete" method="post">
-            <button class="button" onclick="return confirm('Are you sure you want to delete {{entry.title}}?')">Delete Entry</button>
-        </form>
+
 {{/partial}}
 {{#partial "create-button"}}{{/partial}}
 {{#partial "title"}}Editing {{entry.title}}{{/partial}}
